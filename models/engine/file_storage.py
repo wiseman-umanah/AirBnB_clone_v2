@@ -61,3 +61,12 @@ class FileStorage:
             delIns = f"{obj.__class__.__name__}.{obj.id}"
             del FileStorage.__objects[delIns]
             self.save()
+
+    @property
+    def cities(self):
+        instances = []
+        cities  = self.all(City)
+        for city in cities:
+            if city.id == State.id:
+                instances.append(city)
+        return (instances)
