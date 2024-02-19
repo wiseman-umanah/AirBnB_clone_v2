@@ -24,7 +24,7 @@ class FileStorage:
             for i in FileStorage.__objects.keys():
                 if i.startswith(cls.__name__):
                     dum[i] = FileStorage.__objects[i]
-            return(dum)
+            return (dum)
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -51,7 +51,7 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
                 for key, val in temp.items():
-                        self.all()[key] = classes[val['__class__']](**val)
+                    self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
 
