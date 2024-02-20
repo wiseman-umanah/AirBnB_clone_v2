@@ -6,37 +6,43 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 from os import getenv
 
-
+time = "%Y-%m-%dT%H:%M:%S.%f"
 db_type = getenv("HBNB_TYPE_STORAGE")
 if db_type == "db":
     Base = declarative_base()
 else:
     Base = object
 
+
 class BaseModel:
     """A base class for all hbnb models"""
     if db_type == "db":
         id = Column(String(60), nullable=False, primary_key=True)
-        created_at = Column(DateTime, default=(datetime.utcnow()), nullable=False)
-        updated_at = Column(DateTime, default=(datetime.utcnow()), nullable=False)
+        created_at = Column(DateTime, default=(datetime.utcnow()),
+                            nullable=False)
+        updated_at = Column(DateTime, default=(datetime.utcnow()),
+                            nullable=False)
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if kwargs:
-            if 'id' not in kwargs:
-                self.id = str(uuid.uuid4())
-
             for key, value in kwargs.items():
-                if key == "created_at" or key == "updated_at":
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
-
-            if 'created_at' not in kwargs:
-                self.created_at = self.updated_at = datetime.now()
+            if kwargs.get("created_at", None) and type(self.created_at) is str:
+                self.created_at = datetime.strptime(kwargs["created_at"], time)
+            else:
+                self.created_at = datetime.utcnow()
+            if kwargs.get("updated_at", None) and type(self.updated_at) is str:
+                self.updated_at = datetime.strptime(kwargs["updated_at"], time)
+            else:
+                self.updated_at = datetime.utcnow()
+            if kwargs.get("id", None) is None:
+                self.id = str(uuid.uuid4())
         else:
             self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
+            self.created_at = datetime.utcnow()
+            self.updated_at = self.created_at
 
     def __str__(self):
         """Returns a string representation of the instance"""

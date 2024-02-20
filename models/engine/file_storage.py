@@ -64,8 +64,10 @@ class FileStorage:
 
     @property
     def cities(self):
+        """City getter, relationship between city and
+        state for FileStorage"""
         instances = []
-        cities  = self.all(City)
+        cities = self.all(City)
         for city in cities:
             if city.id == State.id:
                 instances.append(city)

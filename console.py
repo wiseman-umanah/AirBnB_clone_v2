@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import shlex
 
 
 class HBNBCommand(cmd.Cmd):
@@ -113,27 +114,20 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class"""
-        arg = args.split()
-        if not args:
+    def do_create(self, arg):
+        """Creates a new instance of a class"""
+        args = arg.split()
+        if len(args) == 0:
             print("** class name missing **")
-            return
-        elif arg[0] not in HBNBCommand.classes:
+            return False
+        if args[0] in self.classes:
+            new_dict = self._key_value(args[1:])
+            instance = self.classes[args[0]](**new_dict)
+        else:
             print("** class doesn't exist **")
-            return
-
-        new_instance = HBNBCommand.classes[arg[0]]()
-        temp = {}
-        for keyVal in arg[1:]:
-            keyVal = keyVal.split("=")
-            key = keyVal[0]
-            value = keyVal[1].replace('"', "").replace("_", " ")
-            temp[key] = value
-        self.do_update(f"{arg[0]} {new_instance.id} {temp}")
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+            return False
+        print(instance.id)
+        instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -328,6 +322,28 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
+    @staticmethod
+    def _key_value(args):
+        """creates a dictionary from a list of strings"""
+        new_dict = {}
+        for arg in args:
+            if "=" in arg:
+                kvp = arg.split('=', 1)
+                key = kvp[0]
+                value = kvp[1]
+                if value[0] == value[-1] == '"':
+                    value = shlex.split(value)[0].replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except TypeError:
+                        try:
+                            value = float(value)
+                        except TypeError:
+                            continue
+                new_dict[key] = value
+        return new_dict
 
 
 if __name__ == "__main__":
