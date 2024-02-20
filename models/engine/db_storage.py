@@ -33,7 +33,8 @@ class DBStorage:
     def all(self, cls=None):
         """List all instances of a class or all classes"""
         classes = {
-                    'State': State, 'City': City
+                    'State': State, 'City': City,
+                    'User' : User
                   }
         instances = {}
         for clsId in classes:
