@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """The DataBase Storage system with mysql"""
 from sqlalchemy import create_engine
-import os
+from os import getenv
 from models.base_model import Base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 from models.base_model import BaseModel
@@ -19,11 +19,11 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        self.user = os.getenv('HBNB_MYSQL_USER')
-        self.pwd = os.getenv('HBNB_MYSQL_PWD')
-        self.host = os.getenv('HBNB_MYSQL_HOST')
-        self.dbname = os.getenv('HBNB_MYSQL_DB')
-        self.env = os.getenv("HBNB_ENV")
+        self.user = getenv('HBNB_MYSQL_USER')
+        self.pwd = getenv('HBNB_MYSQL_PWD')
+        self.host = getenv('HBNB_MYSQL_HOST')
+        self.dbname = getenv('HBNB_MYSQL_DB')
+        self.env = getenv("HBNB_ENV")
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}:{}/{}".format(
             self.user, self.pwd, self.host, 3306, self.dbname), pool_pre_ping=True)
         if self.env == "test":
