@@ -161,3 +161,8 @@ QL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py
 $ echo 'destroy City 91968123-5529-45ec-a728-e04ebeae9d90' | HBNB_MYSQL_USER=hbnb_dev HBNB_MYSQL_PWD=hbnb_dev_pwd HBNB_MYSQL_HOST=localhost HBNB_MYSQL_DB=hbnb_dev_db HBNB_TYPE_STORAGE=db ./console.py
 ```
 <br>
+
+![sql](image.png)
+
+### Checking mysql for data validation
+![ubuntu](image-1.png)
