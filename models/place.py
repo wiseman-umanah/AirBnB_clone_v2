@@ -3,8 +3,9 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from models.review import Review
 from models.engine.file_storage import FileStorage
-from models.amenity import Amenity
+
 
 metadata = MetaData()
 place_amenity = Table(
@@ -31,6 +32,17 @@ class Place(BaseModel, Base):
     review = relationship("Review", backref="place", cascade="all, delete")
     amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
     
+    @property
+    def reviews(self):
+        """Reviews getter, relationship between reviews and
+        current place for FileStorage"""
+        instances = []
+        review = FileStorage.all(Review)
+        for ref in review:
+            if ref.id == Place.id:
+                instances.append(ref)
+        return (instances)
+
     @property
     def amenities(self):
         """amenities getter, return the amenity_ids"""
