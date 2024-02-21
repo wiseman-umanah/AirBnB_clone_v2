@@ -3,8 +3,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from models.review import Review
-from models.engine.file_storage import FileStorage
+import models
 
 
 metadata = MetaData()
@@ -36,8 +35,9 @@ class Place(BaseModel, Base):
     def reviews(self):
         """Reviews getter, relationship between reviews and
         current place for FileStorage"""
+        from models.review import Review
         instances = []
-        review = FileStorage.all(Review)
+        review = models.storage.all(Review)
         for ref in review:
             if ref.id == self.id:
                 instances.append(ref)
@@ -48,9 +48,9 @@ class Place(BaseModel, Base):
         """amenities getter, return the amenity_ids"""
         return self.amenity_ids
     
-    @amenities.getter
-    def amenities(self):
+    @amenities.setter
+    def amenities(self, obj=None):
         """Add a new Amenity instance in amenity_ids"""
-        classname = self.__class__.__name__
-        if classname == "Amenity":
-            self.amenity_ids.append(self.id)
+        if obj is not None:
+            if obj["__class__"] == "Amenity":
+                self.amenity_ids.append(obj.id)

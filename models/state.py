@@ -3,8 +3,7 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models.city import City
-from models.engine.file_storage import FileStorage
+import models
 
 
 class State(BaseModel, Base):
@@ -17,8 +16,9 @@ class State(BaseModel, Base):
     def cities(self):
         """City getter, relationship between city and
         state for FileStorage"""
+        from models.city import City
         instances = []
-        cities = FileStorage.all(City)
+        cities = models.storage.all(City)
         for city in cities:
             if city.id == self.id:
                 instances.append(city)
