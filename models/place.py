@@ -39,7 +39,7 @@ class Place(BaseModel, Base):
         instances = []
         review = FileStorage.all(Review)
         for ref in review:
-            if ref.id == Place.id:
+            if ref.id == self.id:
                 instances.append(ref)
         return (instances)
 
