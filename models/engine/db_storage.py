@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """The DataBase Storage system with mysql"""
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from os import getenv
 from models.base_model import Base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -34,7 +34,8 @@ class DBStorage:
         """List all instances of a class or all classes"""
         classes = {
                     'State': State, 'City': City,
-                    'User' : User
+                    'User' : User, 'Place': Place,
+                    'Amenity': Amenity, 'Review': Review
                   }
         instances = {}
         for clsId in classes:
@@ -63,5 +64,12 @@ class DBStorage:
 
     def delete(self, obj=None):
         """Deletes an object from the database"""
+        classes = {"City": City}
         if obj is not None:
-            self.__session.delete(obj)
+            table, id = obj.split(".")
+            model = self.__session.query(classes[table]).filter(classes[table].id == id).first()
+            if model:
+                self.__session.delete(model)
+                self.save()
+            else:
+                raise KeyError
