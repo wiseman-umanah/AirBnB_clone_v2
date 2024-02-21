@@ -34,7 +34,7 @@ class DBStorage:
         """List all instances of a class or all classes"""
         classes = {
                     'State': State, 'City': City,
-                    'User' : User, 'Place': Place,
+                    'User': User, 'Place': Place,
                     'Amenity': Amenity, 'Review': Review
                   }
         instances = {}
@@ -67,7 +67,8 @@ class DBStorage:
         classes = {"City": City}
         if obj is not None:
             table, id = obj.split(".")
-            model = self.__session.query(classes[table]).filter(classes[table].id == id).first()
+            model = self.__session.query(classes[table]).filter(
+                classes[table].id == id).first()
             if model:
                 self.__session.delete(model)
                 self.save()

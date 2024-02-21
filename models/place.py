@@ -9,8 +9,10 @@ import models
 metadata = MetaData()
 place_amenity = Table(
     "place_amenity", metadata,
-    Column("place_id", String(60), ForeignKey("places.id"), primary_key=True, nullable=False),
-    Column("amenity_id", String(60), ForeignKey("amenities.id"), primary_key=True, nullable=False)
+    Column("place_id", String(60), ForeignKey("places.id"),
+           primary_key=True, nullable=False),
+    Column("amenity_id", String(60), ForeignKey("amenities.id"),
+           primary_key=True, nullable=False)
 )
 
 
@@ -29,8 +31,9 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
     amenity_ids = []
     review = relationship("Review", backref="place", cascade="all, delete")
-    amenities = relationship("Amenity", secondary=place_amenity, viewonly=False)
-    
+    amenities = relationship("Amenity", secondary=place_amenity,
+                             viewonly=False)
+
     @property
     def reviews(self):
         """Reviews getter, relationship between reviews and
@@ -47,7 +50,7 @@ class Place(BaseModel, Base):
     def amenities(self):
         """amenities getter, return the amenity_ids"""
         return self.amenity_ids
-    
+
     @amenities.setter
     def amenities(self, obj=None):
         """Add a new Amenity instance in amenity_ids"""
