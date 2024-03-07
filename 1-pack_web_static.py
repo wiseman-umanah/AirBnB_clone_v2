@@ -10,8 +10,10 @@ from datetime import datetime
 
 
 def do_pack():
-	time = datetime.now()
-	filename = f"web_static_{time.year}{time.month:02d}{time.day:02d}{time.hour:02d}{time.minute:02d}{time.second:02d}.tgz"
-	local(f"tar -zcvf {filename} ./web_static ; mkdir versions ; mv {filename} versions/ ")
-	location = f"versions/{filename}"
-	return location
+    time = datetime.now()
+    filename = f"web_static_{time.year}{time.month:02d}{time.day:02d}{time.hour:02d}{time.minute:02d}{time.second:02d}.tgz"
+    local("tar -zcvf {0} ./web_static ;\
+          mkdir versions ;\
+          mv {0} versions/ ".format(filename))
+    location = f"versions/{filename}"
+    return location
