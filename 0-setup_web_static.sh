@@ -1,23 +1,12 @@
 #!/usr/bin/env bash
-# sets up web servers for deployment of web_static
-if [ ! -f /usr/bin/nginx ]; then
-	apt-get update
-	apt-get install -y nginx
-	ufw allow "Nginx HTTP"
-fi
-if [ ! -d /data/web_static/releases/test/ ]; then
-	mkdir -p /data/web_static/releases/test/
-fi
-if [ ! -d /data/web_static/shared/ ]; then
-	mkdir -p /data/web_static/shared/
-fi
-chown -R ubuntu:ubuntu /data
-if [ ! -L /data/web_static/current ]; then
-	ln -sfn /data/web_static/releases/test /data/web_static/current
-else
-	rm /data/web_static/current
-	ln -sfn /data/web_static/releases/test /data/web_static/current
-fi
+# Set up a web server for deployment of the web_static.
+
+apt-get update
+apt-get install -y nginx
+
+# Create necessary directories
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
 
 echo "
 <!DOCTYPE html>
@@ -30,26 +19,32 @@ echo "
 </html>
 " > /data/web_static/releases/test/index.html
 
-printf "%s\n" "
-# Default server configuration
-#
-server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	root /var/www/html;
-	index index.html index.htm;
-	server_name _;
+ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-	location / {
-		try_files $uri $uri/ =404;
-	}
+# Set ownership and group for the /data directory
+chown -R ubuntu:ubuntu /data/
 
-	location /hbnb_static {
-		alias /data/web_static/current;
-		index index.html index.htm;
-	}
-}
-" > /etc/nginx/sites-available/default
+# Configure Nginx
+printf "%s\n" "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    add_header X-Served-By \$HOSTNAME;
+    root /var/www/html;
+    index index.html index.htm;
 
-nginx -t
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
+
+    location /redirect_me {
+        return 301 http://www.google.com/;
+    }
+
+    error_page 404 /404.html;
+    location /404 {
+        root /var/www/html;
+        internal;
+    }
+}" > /etc/nginx/sites-available/default
 service nginx restart
