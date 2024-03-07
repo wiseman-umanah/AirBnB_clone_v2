@@ -5,31 +5,26 @@ that distributes an archive
 to your web servers,
 using the function do_deploy"""
 from fabric.api import *
-from os import path
+from os.path import exists
 
 
-env.user = "ubuntu"
 env.hosts = ['100.25.181.103', '54.160.70.20']
 def do_deploy(archive_path):
-    if archive_path is None:
-        returun False
+    """distributes an archive to the web servers"""
+    if exists(archive_path) is False:
+        return False
     try:
-        tmp = archive.split("/")
-        file_ext = tmp[-1]
-        ext, file_name = path.splitext(file_ext)
-        put(archive_path, "/tmp/")
-        unbundle_path = f"/data/web_static/releases/{file_name}/"
-        run(f"mkdir -p {unbundle_path}")
-        run(f"tar -xzf /tmp/{file_ext} -C {unbundle_path}")
-        #delete archive from web_server
-        run(f"rm /tmp/{filename}")
-        run(f"mv {unbundle_path}web_static/* {unbundle_path}")
-        run(f"rm -rf {unbundle_path}web_static")
-        run(f"rm -rf /data/web_static/current")
-        run(f"ln -s {unbundle_path} /data/web_static/current")
-        print("New version deployed!")
-        print("\nDone")
+        file_n = archive_path.split("/")[-1]
+        no_ext = file_n.split(".")[0]
+        path = "/data/web_static/releases/"
+        put(archive_path, '/tmp/')
+        run('mkdir -p {}{}/'.format(path, no_ext))
+        run('tar -xzf /tmp/{} -C {}{}/'.format(file_n, path, no_ext))
+        run('rm /tmp/{}'.format(file_n))
+        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, no_ext))
+        run('rm -rf {}{}/web_static'.format(path, no_ext))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {}{}/ /data/web_static/current'.format(path, no_ext))
         return True
     except:
         return False
-
