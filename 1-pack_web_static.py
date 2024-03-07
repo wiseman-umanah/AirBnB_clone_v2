@@ -12,12 +12,12 @@ from datetime import datetime
 def do_pack():
     """Function used to
     pack files to .tgz"""
-    time = datetime.now()
-    filename = f"web_static_{time.year}{time.month:02d}{time.day:02d}{time.hour:02d}{time.minute:02d}{time.second:02d}.tgz"
-    local("tar -zcvf {0} ./web_static ;\
-          mkdir versions ;\
-          mv {0} versions/ ".format(filename))
-    location = f"versions/{filename}"
-    return location
 
-do_pack()
+    time = datetime.now()
+    archive = 'web_static_' + time.strftime("%Y%m%d%H%M%S") + '.' + 'tgz'
+    local('mkdir -p versions')
+    create = local('tar -cvzf versions/{} web_static'.format(archive))
+    if create is not None:
+        return archive
+    else:
+        return None
