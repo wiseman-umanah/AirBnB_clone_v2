@@ -17,3 +17,5 @@ def do_pack():
           mv {0} versions/ ".format(filename))
     location = f"versions/{filename}"
     return location
+
+do_pack()
