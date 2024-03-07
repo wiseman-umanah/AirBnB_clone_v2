@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 # sets up web servers for deployment of web_static
 if [ ! -f /usr/bin/nginx ]; then
 	apt-get update
@@ -28,9 +28,28 @@ echo "
     Holberton School
   </body>
 </html>
-" >> /data/web_static/releases/test/index.html
-sed -i 's|root .*|root /data/web_static/releases/test;' /etc/nginx/sites-available/default
-sed -i '\|location / {|{:a; N; \|}|\!ba; a\
-location /hbnb_static {\n    alias /data/web_static/current\n}' /etc/nginx/sites-available/default
+" > /data/web_static/releases/test/index.html
+
+printf "%s\n" "
+# Default server configuration
+#
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	root /var/www/html;
+	index index.html index.htm;
+	server_name _;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	location /hbnb_static {
+		alias /data/web_static/current;
+		index index.html index.htm;
+	}
+}
+" > /etc/nginx/sites-available/default
+
 nginx -t
 service nginx restart
