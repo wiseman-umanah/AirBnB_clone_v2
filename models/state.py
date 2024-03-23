@@ -12,6 +12,7 @@ class State(BaseModel, Base):
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
     cities = relationship("City", backref="state", cascade="all, delete")
+
     @property
     def cities(self):
         """City getter, relationship between city and
@@ -19,7 +20,7 @@ class State(BaseModel, Base):
         from models.city import City
         instances = []
         cities = models.storage.all(City)
-        
+
         for city in cities:
             if cities[city].state_id == self.id:
                 instances.append(cities[city])
