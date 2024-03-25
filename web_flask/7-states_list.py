@@ -8,12 +8,14 @@ app = Flask(__name__)
 
 @app.route("/states_list", strict_slashes=False)
 def display_states():
+    """Lists all the states in database"""
     states = storage.all(State)
     return render_template("7-states_list.html", states=states)
 
 
 @app.teardown_appcontext
 def display_states_close(error):
+    """Closes each query seesion"""
     storage.close()
 
 
