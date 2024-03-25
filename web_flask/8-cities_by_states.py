@@ -8,12 +8,14 @@ app = Flask(__name__)
 
 @app.route("/cities_by_state", strict_slashes=False)
 def display_states_cities():
+    """Returns cities by states for web"""
     states = storage.all(State)
     return render_template("8-cities_by_states.html", states=states)
 
 
 @app.teardown_appcontext
 def display_states_close(error):
+    """Closes session of program"""
     storage.close()
 
 
