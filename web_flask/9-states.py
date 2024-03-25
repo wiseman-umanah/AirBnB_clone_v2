@@ -9,6 +9,7 @@ app = Flask(__name__)
 @app.route("/states/<id>", strict_slashes=False)
 @app.route("/states", strict_slashes=False)
 def display_states(id=""):
+    """Cities with state_id and all states"""
     states = storage.all(State)
     if id != "":
         id = f"State.{id}"
@@ -17,6 +18,7 @@ def display_states(id=""):
 
 @app.teardown_appcontext
 def display_states_close(error):
+    """Closes each query session"""
     storage.close()
 
 
