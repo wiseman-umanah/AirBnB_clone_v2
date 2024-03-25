@@ -11,8 +11,9 @@ app = Flask(__name__)
 def display():
     """Prints all states in dbms"""
     states = storage.all(State)
-    #amenities = storage.all(Amenity)
-    return render_template("10-hbnb_filters.html", states=states) #amenities=amenities)
+    amenities = storage.all(Amenity)
+    return render_template("10-hbnb_filters.html", states=states,
+                           amenities=amenities)
 
 
 @app.teardown_appcontext
