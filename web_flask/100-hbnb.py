@@ -10,6 +10,8 @@ from flask import Flask
 from models.state import State
 from models.place import Place
 from models.amenity import Amenity
+from models.user import User
+from models.review import Review
 from flask import render_template
 
 app = Flask(__name__)
@@ -21,12 +23,14 @@ def hbnb():
     states = storage.all(State)
     amenities = storage.all(Amenity)
     places = storage.all(Place)
-    return render_template("100-hbnb.html",
+    reviews = storage.all(Review)
+    users = storage.all(User)
+    return render_template("100-hbnb.html", reviews=reviews, users=users,
                            states=states, amenities=amenities, places=places)
 
 
 @app.teardown_appcontext
-def teardown():
+def teardown(error):
     """Remove the current SQLAlchemy session."""
     storage.close()
 

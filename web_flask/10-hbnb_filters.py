@@ -9,16 +9,13 @@ app = Flask(__name__)
 
 @app.route("/hbnb_filters", strict_slashes=False)
 def display():
-    """Prints all states in dbms"""
     states = storage.all(State)
-    amenities = storage.all(Amenity)
-    return render_template("10-hbnb_filters.html", states=states,
-                           amenities=amenities)
+    #amenities = storage.all(Amenity)
+    return render_template("10-hbnb_filters.html", states=states) #amenities=amenities)
 
 
 @app.teardown_appcontext
 def display_states_close(error):
-    """Closes each query session"""
     storage.close()
 
 

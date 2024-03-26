@@ -18,7 +18,7 @@
 	border-right: 1px solid #DDDDDD;
 }
 
-.filter_amenities {
+.amenities {
 	display: inline;
 	vertical-align: middle;
 	height: 100%;
@@ -31,7 +31,6 @@
 .popover {
 	list-style-type: none;
 	display: none;
-	background-color: #FAFAFA;
 	width: 100%;
 
 	margin-left: -1px;
@@ -40,15 +39,14 @@
 
 	border: 1px solid #DDDDDD;
 	border-radius: 4px;
-	overflow: scroll;
+	overflow-y: auto;
+	max-height: 300px;
+	z-index: 1000;
 }
 
-.locations:hover .popover {
+.locations:hover .popover, .amenities:hover .popover {
 	display: inline-block;
-}
-
-.filter_amenities:hover .popover {
-	display: inline-block;
+	background-color: #FAFAFA;
 }
 
 ul {
@@ -56,9 +54,6 @@ ul {
 	padding: 0px;
 	padding-bottom: 20px;
 }
-
-li {
-}	
 
 h2 {
 	font-size: 16px;
@@ -99,4 +94,8 @@ button {
 
 button:hover {
 	opacity: 90%;
+}
+
+.popover::-webkit-scrollbar {
+	display: none;
 }
